@@ -1,0 +1,33 @@
+G = [0 1 1 1 0 0 0 0 0 0 0 0;1 0 1 1 0 0 0 0 0 0 0 0;1 1 0 1 0 0 1 0 1 0 0 0;1 1 1 0 0 0 0 0 0 0 0 0; 0 0 0 0 0 1 1 1 0 0 0 0;0 0 0 0 1 0 1 1 0 0 0 0;0 0 1 0 1 1 0 1 1 0 0 0;0 0 0 0 1 1 1 0 0 0 0 0;0 0 1 0 0 0 1 0 0 1 1 1;0 0 0 0 0 0 0 0 1 0 1 1; 0 0 0 0 0 0 0 0 1 1 0 1;0 0 0 0 0 0 0 0 1 1 1 0];
+
+nei = zeros([8, 1])';
+nei(1) = NEindex({[1 2 3 4 5 6], [7 8 9 10 11 12]},G);
+nei(2) = NEindex({[1 2 3 4 5 6 7 8], [9 10 11 12]},G);
+nei(3) = NEindex({[1 2 3], [4], [5 6 7 8], [9 10 11 12]},G);
+nei(4) = NEindex({[1 2 3], [4], [5], [6 7 8], [9 10 11 12]},G);
+nei(5) = NEindex({[1 2], [3 4], [5], [6 7 8], [9 10], [11 12]},G);
+nei(6) = NEindex({[1 2 3 4], [5 6 7 8], [9 10 11 12]},G);
+nei(7) = NEindex({[1 2 3 4 5 6 7 8 9 10 11 12]},G);
+nei(8) = NEindex({[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]},G);
+
+modu = zeros([8, 1])';
+modu(1) = modularity_metric({[1 2 3 4 5 6], [7 8 9 10 11 12]},G);
+modu(2) = modularity_metric({[1 2 3 4 5 6 7 8], [9 10 11 12]},G);
+modu(3) = modularity_metric({[1 2 3], [4], [5 6 7 8], [9 10 11 12]},G);
+modu(4) = modularity_metric({[1 2 3], [4], [5], [6 7 8], [9 10 11 12]},G);
+modu(5) = modularity_metric({[1 2], [3 4], [5], [6 7 8], [9 10], [11 12]},G);
+modu(6) = modularity_metric({[1 2 3 4], [5 6 7 8], [9 10 11 12]},G);
+modu(7) = modularity_metric({[1 2 3 4 5 6 7 8 9 10 11 12]},G);
+modu(8) = modularity_metric({[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]},G);
+
+Cs = 4;
+KM = kmeans(adj,Cs);
+linkg = linkage(G);
+KM = cluster(linkg,'maxclust',Cs);
+CLUSTERS = cell([Cs,1])'
+for i=1:length(KM)
+  CLUSTERS{KM(i)} = [CLUSTERS{KM(i)},i]; 
+end
+md = modularity_metric(CLUSTERS,adj);
+ne = NEindex(CLUSTERS,adj);
+md, ne
